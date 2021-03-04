@@ -6,7 +6,7 @@ public class Lane : MonoBehaviour
 {
     public float[] lanesMiddles = new float[4];
     
-    private void setLanesMiddles()
+    public void setLanesMiddles()
     {
         float laneDimension = transform.localScale[Constants.Z] / 4;
 
@@ -23,9 +23,4 @@ public class Lane : MonoBehaviour
 
         }
     }
-    void Start()
-    {
-        setLanesMiddles();
-    }
-
 }

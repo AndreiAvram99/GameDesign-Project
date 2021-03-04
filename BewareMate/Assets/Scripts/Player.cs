@@ -27,8 +27,16 @@ public class Player : MonoBehaviour
         onGround = true;
         playerRigidBody = GetComponent<Rigidbody>();
         setPlayerStartLane();
+        setPlayerStartPosition();
         setPLayerInputKeys();
         setMatePlayer();
+
+        
+    }
+
+    private void setPlayerStartPosition() {
+        gameManager.floor.GetComponent<Lane>().setLanesMiddles();
+
         Vector3 startPositionVector = new Vector3(gameManager.floor.GetComponent<Lane>().lanesMiddles[startLane],
                                                   transform.position[Constants.Y],
                                                   transform.position[Constants.Z]);
@@ -126,8 +134,9 @@ public class Player : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        Debug.Log("Am sarit");
-        if (collision.gameObject.tag == "Floor")
+        if (collision.gameObject.tag == "Floor" ||
+            collision.gameObject.tag == "FirstPlayer" ||
+            collision.gameObject.tag == "SecondPlayer")
         {
             onGround = true;
         }

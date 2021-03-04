@@ -8,6 +8,7 @@ public class Constants : MonoBehaviour
     public const int X = 0;
     public const int Y = 1;
     public const int Z = 2;
+
     public const int A_KEYCODE = 97;
     public const int W_KEYCODE = 119;
     public const int D_KEYCODE = 100;
