@@ -5,119 +5,145 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
+    GameManager gameManager;
+
+    public string playerTag = "";
+
     private int leftKeyCode;
     private int rightKeyCode;
     private int upKeyCode;
-    private string playerTag;
 
-    private Player matePlayer;
-    private GameObject playerObject;
-    private int startPositionIndex;
-    private int currentPositionIndex;
-    private float[] lanesMiddles; 
-    private Vector3 transformPosition;
+    private GameObject matePlayer;
 
-    public Player(GameManager gameManager, string playerTag)
+    private int startLane;
+    private int currentLane;
+
+    private bool onGround;
+    private Rigidbody playerRigidBody;
+
+
+    private void initPlayer()
     {
-        this.playerTag = playerTag;
-        playerObject = GameObject.FindGameObjectWithTag(this.playerTag);
-        setLanesMiddles(gameManager);
-        setStartPositionIndexAndKeys();
-        setPosition(new Vector3(lanesMiddles[startPositionIndex],
-                                    playerObject.transform.position[Constants.Y],
-                                    playerObject.transform.position[Constants.Z]));
+        onGround = true;
+        playerRigidBody = GetComponent<Rigidbody>();
+        setPlayerStartLane();
+        setPLayerInputKeys();
+        setMatePlayer();
+        Vector3 startPositionVector = new Vector3(gameManager.floor.GetComponent<Lane>().lanesMiddles[startLane],
+                                                  transform.position[Constants.Y],
+                                                  transform.position[Constants.Z]);
+        setPlayerPosition(startPositionVector);
     }
 
-    public void addMatePlayer(Player player)
+    private void setPlayerStartLane()
     {
-        matePlayer = player;
+        if (playerTag == "FirstPlayer") startLane = Constants.FIRST_PLAYER_POSITION_INDEX;
+        else startLane = Constants.SECOND_PLAYER_POSITION_INDEX;
+        currentLane = startLane;
     }
 
-    public void moveForward(GameManager gameManager)
-    {
-        transformPosition = gameManager.moveVector * gameManager.moveSpeed * Time.deltaTime;
-        playerObject.transform.Translate(transformPosition);
+    private void setPLayerInputKeys() {
+        if (playerTag == "FirstPlayer") setFirstPlayerKeys();
+        else setSecondPlayerKeys();
     }
 
-    public void changeLane()
+    private void setFirstPlayerKeys()
     {
-        bool moveFlag = false;
-        if (Input.GetKeyUp((KeyCode)leftKeyCode) &&
-                            currentPositionIndex != 0 &&
-                            currentPositionIndex - 1 != matePlayer.currentPositionIndex)
-        {
-            setCurrentPositionIndex(currentPositionIndex - 1);
-            moveFlag = true;
-        }
-
-        else if (Input.GetKeyUp((KeyCode)rightKeyCode) &&
-                                 currentPositionIndex != 3 &&
-                                 currentPositionIndex + 1 != matePlayer.currentPositionIndex)
-        {
-            setCurrentPositionIndex(currentPositionIndex + 1);
-            moveFlag = true;
-        }
-
-        if (moveFlag)
-        {
-            Vector3 playerMoveDirection = new Vector3(lanesMiddles[currentPositionIndex],
-                                                        playerObject.transform.position[Constants.Y],
-                                                        playerObject.transform.position[Constants.Z]);
-            setPosition(playerMoveDirection);
-        }
-    }
-
-    private void setCurrentPositionIndex(int index)
-    {
-        currentPositionIndex = index;
-    }
-
-    private void setLanesMiddles(GameManager gameManager)
-    {
-        lanesMiddles = new float[4];
-        float laneDimension = gameManager.floor.transform.localScale[Constants.Z] / 4;
-
-        for (int i = 0; i < lanesMiddles.Length; i++)
-        {
-            if (i < 2)
-            {
-                lanesMiddles[i] = 0 - (1 - i) * laneDimension - laneDimension / 2;
-            }
-            else
-            {
-                lanesMiddles[i] = 0 + (i - 2) * laneDimension + laneDimension / 2;
-            }
-
-        }
-    }
-
-    private void setFirstPlayerKeys() {
         leftKeyCode = Constants.A_KEYCODE;
         rightKeyCode = Constants.D_KEYCODE;
         upKeyCode = Constants.W_KEYCODE;
     }
 
-    private void setSecondPlayerKeys() {
+    private void setSecondPlayerKeys()
+    {
         leftKeyCode = Constants.LEFT_ARROW_KEYCODE;
         rightKeyCode = Constants.RIGHT_ARROW_KEYCODE;
         upKeyCode = Constants.UP_ARROW_KEYCODE;
     }
 
-    private void setPosition(Vector3 position) {
-        playerObject.transform.position = position;
+    private void setMatePlayer() {
+        if (playerTag == "FirstPlayer") 
+            matePlayer = GameObject.FindGameObjectWithTag("SecondPlayer");
+        else
+            matePlayer = GameObject.FindGameObjectWithTag("FirstPlayer");
     }
 
-    private void setStartPositionIndexAndKeys() {
-        if (playerTag == "FirstPlayer")
+    private void setPlayerPosition(Vector3 positionVector)
+    {
+        transform.position = positionVector;
+    }
+
+    public void moveForward()
+    {
+        Vector3 transformPosition = gameManager.moveVector * gameManager.moveSpeed * Time.deltaTime;
+        transform.Translate(transformPosition);
+    }
+
+    public void changeLane()
+    {
+        bool moveFlag = false;
+
+        if (Input.GetKeyUp((KeyCode)leftKeyCode) &&
+                            currentLane != 0 && 
+                            (currentLane - 1 != matePlayer.GetComponent<Player>().currentLane || 
+                            (onGround && !matePlayer.GetComponent<Player>().onGround) || 
+                            (!onGround && matePlayer.GetComponent<Player>().onGround)))
         {
-            startPositionIndex = Constants.FIRST_PLAYER_POSITION_INDEX;
-            setFirstPlayerKeys();
+            currentLane -= 1;
+            moveFlag = true;
         }
-        else
+
+        else if (Input.GetKeyUp((KeyCode)rightKeyCode) &&
+                                 currentLane != 3 &&
+                                 (currentLane + 1 != matePlayer.GetComponent<Player>().currentLane || 
+                                 (onGround && !matePlayer.GetComponent<Player>().onGround) || 
+                                 (!onGround && matePlayer.GetComponent<Player>().onGround)))
         {
-            startPositionIndex = Constants.SECOND_PLAYER_POSITION_INDEX;
-            setSecondPlayerKeys();
+            currentLane += 1;
+            moveFlag = true;
         }
-        currentPositionIndex = startPositionIndex;
+
+        if (moveFlag)
+        {
+            Vector3 playerMoveDirectionVecotr = new Vector3(gameManager.floor.GetComponent<Lane>().lanesMiddles[currentLane],
+                                                            transform.position[Constants.Y],
+                                                            transform.position[Constants.Z]);
+            setPlayerPosition(playerMoveDirectionVecotr);
+        }
+    }
+
+    public void jump()
+    {
+        if (onGround)
+        {
+            if (Input.GetKeyDown((KeyCode)upKeyCode))
+            {
+                playerRigidBody.velocity = new Vector3(0f, 8f, 0f);
+                onGround = false;
+            }
+        }
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        Debug.Log("Am sarit");
+        if (collision.gameObject.tag == "Floor")
+        {
+            onGround = true;
+        }
+    }
+
+    void Start()
+    {
+        GameObject gameController = GameObject.FindGameObjectWithTag("GameController");
+        gameManager = gameController.GetComponent<GameManager>();
+        initPlayer();
+    }
+
+    void Update()
+    {
+        moveForward();
+        changeLane();
+        jump();
     }
 }
