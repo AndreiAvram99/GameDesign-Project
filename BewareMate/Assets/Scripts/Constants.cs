@@ -19,4 +19,7 @@ public class Constants : MonoBehaviour
     public const int FIRST_PLAYER_POSITION_INDEX = 0;
     public const int SECOND_PLAYER_POSITION_INDEX = 2;
 
+    public const int SHUFFLE_ITERATIONS = 20;
+    public const int FLOOR_LENGTH = 40;
+
 }
