@@ -8,7 +8,8 @@ public class Lane : MonoBehaviour
     
     public void setLanesMiddles()
     {
-        float laneDimension = transform.localScale[Constants.Z] / 4;
+        float laneDimension = 18 / 4;
+        /*float laneDimension = transform.localScale[Constants.Z] / 4;*/
 
         for (int i = 0; i < lanesMiddles.Length; i++)
         {
