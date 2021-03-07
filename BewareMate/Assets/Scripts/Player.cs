@@ -8,10 +8,10 @@ public class Player : MonoBehaviour
     GameManager gameManager;
 
     public string playerTag = "";
-    public bool onMate = false;
+    public float jumpHigh = 10f;
 
-    public static bool isMateColission;
-
+    /*public static bool isMateColission;
+*/
     private int leftKeyCode;
     private int rightKeyCode;
     private int upKeyCode;
@@ -22,6 +22,7 @@ public class Player : MonoBehaviour
     private int currentLane;
 
     private bool onGround;
+    private bool underMate;
     private Rigidbody playerRigidBody;
 
 
@@ -84,27 +85,17 @@ public class Player : MonoBehaviour
         transform.position = positionVector;
     }
 
-    public void setOnMate(bool onMate)
-    {
-        this.onMate = onMate;
-    }
-
-    public bool getOnMate()
-    {
-        return onMate;
-    }
-
     public void moveForward()
     {
         Vector3 transformPosition = gameManager.moveVector * gameManager.moveSpeed * Time.deltaTime;
         transform.Translate(transformPosition);
     }
-
+/*
     public bool isMateAboveMe()
     {
-        return transform.position.y < matePlayer.transform.position.y && 
-            currentLane == matePlayer.GetComponent<Player>().currentLane;
-    }
+        return transform.position.y < matePlayer.transform.position.y &&
+               isMateColission;
+    }*/
 
     public int getCurrentLane()
     {
@@ -122,7 +113,7 @@ public class Player : MonoBehaviour
                             (onGround && !matePlayer.GetComponent<Player>().onGround) || 
                             (!onGround && matePlayer.GetComponent<Player>().onGround)))
         {
-            if (isMateAboveMe())
+            if (underMate)
             {
                 Debug.Log($"{playerTag} e dedesubt");
                 moveMate = true;
@@ -140,7 +131,7 @@ public class Player : MonoBehaviour
                                  (onGround && !matePlayer.GetComponent<Player>().onGround) || 
                                  (!onGround && matePlayer.GetComponent<Player>().onGround)))
         {
-            if (isMateAboveMe())
+            if (underMate)
             {
                 Debug.Log($"{playerTag} e dedesubt");
                 moveMate = true;
@@ -177,7 +168,7 @@ public class Player : MonoBehaviour
         {
             if (Input.GetKeyDown((KeyCode)upKeyCode))
             {
-                playerRigidBody.velocity = new Vector3(0f, 10f, 0f);
+                playerRigidBody.velocity = new Vector3(0f, jumpHigh, 0f);
                 onGround = false;
             }
         }
@@ -206,20 +197,49 @@ public class Player : MonoBehaviour
 
     }
 
-    public bool isCollisionWithMate(Collision collision)
+    /*public void isCollisionWithMate(Collision collision)
     {
-        return  isMateColission =   collision.gameObject.tag == "FirstPlayer" ||
-                                    collision.gameObject.tag == "SecondPlayer";
+        isMateColission = collision.gameObject.tag == "FirstPlayer" ||
+                          collision.gameObject.tag == "SecondPlayer";
+    }*/
+
+
+    private void OnCollisionExit(Collision collision)
+    {
+        if (collision.gameObject.tag == "FirstPlayer" ||
+            collision.gameObject.tag == "SecondPlayer")
+        {
+            underMate = false;
+        }
+    }
+
+    private void OnCollisionStay(Collision collision)
+    {
+        if ((collision.gameObject.tag == "FirstPlayer" ||
+             collision.gameObject.tag == "SecondPlayer") &&
+             transform.position.y < matePlayer.transform.position.y)
+        {
+            underMate = true;
+        }
     }
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.tag == "Floor")
+        if (collision.gameObject.tag == "Floor" ||
+            collision.gameObject.tag == "FirstPlayer" ||
+            collision.gameObject.tag == "SecondPlayer")
         {
             onGround = true;
         }
 
-        //isCollisionWithMate(collision);
+        if ((collision.gameObject.tag == "FirstPlayer" ||
+             collision.gameObject.tag == "SecondPlayer") &&
+             transform.position.y < matePlayer.transform.position.y)
+        {
+            underMate = true;
+        }
+
+        /*isCollisionWithMate(collision);*/
     }
 
     void Start()
