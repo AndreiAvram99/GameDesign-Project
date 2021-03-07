@@ -126,7 +126,7 @@ public class Player : MonoBehaviour
         {
             if (Input.GetKeyDown((KeyCode)upKeyCode))
             {
-                playerRigidBody.velocity = new Vector3(0f, 8f, 0f);
+                playerRigidBody.velocity = new Vector3(0f, 10f, 0f);
                 onGround = false;
             }
         }
