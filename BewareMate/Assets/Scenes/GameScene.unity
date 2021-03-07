@@ -322,7 +322,7 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 112
+  m_Constraints: 120
   m_CollisionDetection: 0
 --- !u!114 &456717067
 MonoBehaviour:
@@ -337,8 +337,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerTag: FirstPlayer
-  onMate: 0
-  jumpHigh: 12
+  jumpHigh: 10
 --- !u!1 &482403806 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 4734884549263426905, guid: 369ff684b57eb844fb94a01308c164c4,
@@ -719,7 +718,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 054ed57e3a2b2064cb7a31a51ad51d09, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 4.5
+  moveSpeed: 5.5
   moveVector: {x: 0, y: 0, z: 1}
   floor: {fileID: 3696076990779282482}
 --- !u!4 &1075390149
@@ -912,7 +911,7 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 112
+  m_Constraints: 120
   m_CollisionDetection: 0
 --- !u!65 &1340436053
 BoxCollider:
@@ -1001,8 +1000,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerTag: SecondPlayer
-  onMate: 0
-  jumpHigh: 12
+  jumpHigh: 10
 --- !u!1001 &1565735510
 PrefabInstance:
   m_ObjectHideFlags: 0

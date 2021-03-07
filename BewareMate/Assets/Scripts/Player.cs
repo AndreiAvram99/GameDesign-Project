@@ -10,8 +10,6 @@ public class Player : MonoBehaviour
     public string playerTag = "";
     public float jumpHigh = 10f;
 
-    /*public static bool isMateColission;
-*/
     private int leftKeyCode;
     private int rightKeyCode;
     private int upKeyCode;
@@ -90,12 +88,6 @@ public class Player : MonoBehaviour
         Vector3 transformPosition = gameManager.moveVector * gameManager.moveSpeed * Time.deltaTime;
         transform.Translate(transformPosition);
     }
-/*
-    public bool isMateAboveMe()
-    {
-        return transform.position.y < matePlayer.transform.position.y &&
-               isMateColission;
-    }*/
 
     public int getCurrentLane()
     {
@@ -115,7 +107,6 @@ public class Player : MonoBehaviour
         {
             if (underMate)
             {
-                Debug.Log($"{playerTag} e dedesubt");
                 moveMate = true;
                 matePlayer.GetComponent<Player>().currentLane -= 1;
             }
@@ -133,7 +124,6 @@ public class Player : MonoBehaviour
         {
             if (underMate)
             {
-                Debug.Log($"{playerTag} e dedesubt");
                 moveMate = true;
                 matePlayer.GetComponent<Player>().currentLane += 1;
             }
@@ -197,13 +187,6 @@ public class Player : MonoBehaviour
 
     }
 
-    /*public void isCollisionWithMate(Collision collision)
-    {
-        isMateColission = collision.gameObject.tag == "FirstPlayer" ||
-                          collision.gameObject.tag == "SecondPlayer";
-    }*/
-
-
     private void OnCollisionExit(Collision collision)
     {
         if (collision.gameObject.tag == "FirstPlayer" ||
@@ -238,8 +221,6 @@ public class Player : MonoBehaviour
         {
             underMate = true;
         }
-
-        /*isCollisionWithMate(collision);*/
     }
 
     void Start()
@@ -251,7 +232,6 @@ public class Player : MonoBehaviour
 
     void Update()
     {
-        // checkIfOneIsBehind();
         checkIfAboveHole();
         moveForward();
         changeLane();
