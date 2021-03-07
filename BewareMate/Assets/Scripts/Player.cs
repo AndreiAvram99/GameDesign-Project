@@ -8,6 +8,9 @@ public class Player : MonoBehaviour
     GameManager gameManager;
 
     public string playerTag = "";
+    public bool onMate = false;
+
+    public static bool isMateColission;
 
     private int leftKeyCode;
     private int rightKeyCode;
@@ -76,9 +79,19 @@ public class Player : MonoBehaviour
             matePlayer = GameObject.FindGameObjectWithTag("FirstPlayer");
     }
 
-    private void setPlayerPosition(Vector3 positionVector)
+    public void setPlayerPosition(Vector3 positionVector)
     {
         transform.position = positionVector;
+    }
+
+    public void setOnMate(bool onMate)
+    {
+        this.onMate = onMate;
+    }
+
+    public bool getOnMate()
+    {
+        return onMate;
     }
 
     public void moveForward()
@@ -87,9 +100,21 @@ public class Player : MonoBehaviour
         transform.Translate(transformPosition);
     }
 
+    public bool isMateAboveMe()
+    {
+        return transform.position.y < matePlayer.transform.position.y && 
+            currentLane == matePlayer.GetComponent<Player>().currentLane;
+    }
+
+    public int getCurrentLane()
+    {
+        return currentLane;
+    }
+
     public void changeLane()
     {
         bool moveFlag = false;
+        bool moveMate = false;
 
         if (Input.GetKeyUp((KeyCode)leftKeyCode) &&
                             currentLane != 0 && 
@@ -97,7 +122,15 @@ public class Player : MonoBehaviour
                             (onGround && !matePlayer.GetComponent<Player>().onGround) || 
                             (!onGround && matePlayer.GetComponent<Player>().onGround)))
         {
+            if (isMateAboveMe())
+            {
+                Debug.Log($"{playerTag} e dedesubt");
+                moveMate = true;
+                matePlayer.GetComponent<Player>().currentLane -= 1;
+            }
+
             currentLane -= 1;
+
             moveFlag = true;
         }
 
@@ -107,7 +140,15 @@ public class Player : MonoBehaviour
                                  (onGround && !matePlayer.GetComponent<Player>().onGround) || 
                                  (!onGround && matePlayer.GetComponent<Player>().onGround)))
         {
+            if (isMateAboveMe())
+            {
+                Debug.Log($"{playerTag} e dedesubt");
+                moveMate = true;
+                matePlayer.GetComponent<Player>().currentLane += 1;
+            }
+
             currentLane += 1;
+
             moveFlag = true;
         }
 
@@ -117,6 +158,16 @@ public class Player : MonoBehaviour
                                                             transform.position[Constants.Y],
                                                             transform.position[Constants.Z]);
             setPlayerPosition(playerMoveDirectionVecotr);
+        }
+
+        if(moveMate)
+        {
+            int mateLane = matePlayer.GetComponent<Player>().currentLane;
+
+            Vector3 playerMoveDirectionVecotr = new Vector3(gameManager.floor.GetComponent<Lane>().lanesMiddles[mateLane],
+                                                            matePlayer.GetComponent<Player>().transform.position[Constants.Y],
+                                                            matePlayer.GetComponent<Player>().transform.position[Constants.Z]);
+            matePlayer.GetComponent<Player>().setPlayerPosition(playerMoveDirectionVecotr);
         }
     }
 
@@ -131,15 +182,44 @@ public class Player : MonoBehaviour
             }
         }
     }
+    private void checkIfAboveHole()
+    {
+        if (transform.position.y < 0.45)
+        {
+            onGround = false;
+        }
+    }
+
+    private void checkIfOneIsBehind()
+    {
+        if(transform.position.y != matePlayer.GetComponent<Player>().transform.position.y)
+        {
+            float maxZ = Math.Max(transform.position.z, matePlayer.GetComponent<Player>().transform.position.z);
+            transform.position = moveToZ(maxZ);
+            matePlayer.GetComponent<Player>().transform.position = matePlayer.GetComponent<Player>().moveToZ(maxZ);
+        }
+    }
+
+    public Vector3 moveToZ(float Z)
+    {
+        return new Vector3(transform.position.x, transform.position.y, Z);
+
+    }
+
+    public bool isCollisionWithMate(Collision collision)
+    {
+        return  isMateColission =   collision.gameObject.tag == "FirstPlayer" ||
+                                    collision.gameObject.tag == "SecondPlayer";
+    }
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.tag == "Floor" ||
-            collision.gameObject.tag == "FirstPlayer" ||
-            collision.gameObject.tag == "SecondPlayer")
+        if (collision.gameObject.tag == "Floor")
         {
             onGround = true;
         }
+
+        //isCollisionWithMate(collision);
     }
 
     void Start()
@@ -151,6 +231,8 @@ public class Player : MonoBehaviour
 
     void Update()
     {
+        // checkIfOneIsBehind();
+        checkIfAboveHole();
         moveForward();
         changeLane();
         jump();
