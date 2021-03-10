@@ -589,11 +589,11 @@ PlayerSettings:
   m_MobileRenderingPath: 1
   metroPackageName: Template_3D
   metroPackageVersion: 
-  metroCertificatePath: 
+  metroCertificatePath: D:\FII\YEAR_3\SEM_II\GameDesign\GameDesign-Project\BewareMate\Assets\WSATestCertificate.pfx
   metroCertificatePassword: 
-  metroCertificateSubject: 
-  metroCertificateIssuer: 
-  metroCertificateNotAfter: 0000000000000000
+  metroCertificateSubject: DefaultCompany
+  metroCertificateIssuer: DefaultCompany
+  metroCertificateNotAfter: 8095cbb8e334d801
   metroApplicationDescription: Template_3D
   wsaImages: {}
   metroTileShortName: 
