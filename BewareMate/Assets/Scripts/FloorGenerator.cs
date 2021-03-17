@@ -84,8 +84,8 @@ public class FloorGenerator : MonoBehaviour
     }
 
     private void checkPlayers() {
-        if (firstPlayer.transform.position[Constants.Z] >= 22 ||
-           secondPlayer.transform.position[Constants.Z] >= 22) {
+        if (firstPlayer.transform.position[Constants.Z] >= 2 ||
+           secondPlayer.transform.position[Constants.Z] >= 2) {
 
             resetPositions(mainCamera);
             resetPositions(firstPlayer);

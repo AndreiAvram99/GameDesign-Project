@@ -10,6 +10,8 @@ public class Player : MonoBehaviour
     public string playerTag = "";
     public float jumpHigh = 10f;
 
+    private int golaneala = 0;
+    private int lives;
     private int leftKeyCode;
     private int rightKeyCode;
     private int upKeyCode;
@@ -18,6 +20,7 @@ public class Player : MonoBehaviour
 
     private int startLane;
     private int currentLane;
+    private double DIST_FROM_CAMERA = -11.5;
 
     private bool onGround;
     private bool underMate;
@@ -32,7 +35,8 @@ public class Player : MonoBehaviour
         setPlayerStartPosition();
         setPLayerInputKeys();
         setMatePlayer();
-
+        DIST_FROM_CAMERA = Math.Abs(GameObject.FindGameObjectWithTag("MainCamera").transform.position.z - transform.position.z);
+        lives = 3;
         
     }
 
@@ -83,10 +87,18 @@ public class Player : MonoBehaviour
         transform.position = positionVector;
     }
 
+    public bool IsInHole()
+    {
+        return transform.position.y < 0.0;
+    }
+
     public void moveForward()
     {
-        Vector3 transformPosition = gameManager.moveVector * gameManager.moveSpeed * Time.deltaTime;
-        transform.Translate(transformPosition);
+        if (!IsInHole())
+        {
+            Vector3 transformPosition = gameManager.moveVector * gameManager.moveSpeed * Time.deltaTime;
+            transform.Translate(transformPosition);
+        }
     }
 
     public int getCurrentLane()
@@ -171,6 +183,43 @@ public class Player : MonoBehaviour
         }
     }
 
+    private bool IsLostLife()
+    {
+        if (golaneala == 0)
+        {
+            golaneala = 1;
+            Debug.Log(playerTag + ":" + Math.Abs(DIST_FROM_CAMERA + (GameObject.FindGameObjectWithTag("MainCamera").transform.position.z - transform.position.z)));
+            Debug.Log(playerTag + ":" + (Math.Abs(DIST_FROM_CAMERA + (GameObject.FindGameObjectWithTag("MainCamera").transform.position.z - transform.position.z)) > 1.0));
+        }
+        return Math.Abs(DIST_FROM_CAMERA + (GameObject.FindGameObjectWithTag("MainCamera").transform.position.z - transform.position.z)) > 1.0;
+    }
+
+    private void checkIfLostLife()
+    {
+        if(IsLostLife())
+        {
+            if(lives == 1)
+            {
+                Debug.Log("Ai pierdut fraiere " + playerTag);
+            }
+            else
+            {
+                lives--;
+                Debug.Log("Ai pierdut o viata fraiere " + playerTag);
+                Vector3 newPosition = new Vector3(gameManager.floor.GetComponent<Lane>().lanesMiddles[currentLane],
+                                                  2.4f,
+                                                  -37f);
+
+                setPlayerPosition(newPosition);
+
+                newPosition.x = matePlayer.transform.position.x;
+                matePlayer.GetComponent<Player>().setPlayerPosition(newPosition);
+
+                GameObject.FindGameObjectWithTag("MainCamera").transform.position = new Vector3(0, 5.4f, -48.6f);
+            }
+        }
+    }
+
     private void checkIfOneIsBehind()
     {
         if(transform.position.y != matePlayer.GetComponent<Player>().transform.position.y)
@@ -240,6 +289,7 @@ public class Player : MonoBehaviour
     void Update()
     {
         checkIfAboveHole();
+        checkIfLostLife();
         moveForward();
         changeLane();
         jump();
