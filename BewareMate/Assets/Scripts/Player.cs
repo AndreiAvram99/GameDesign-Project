@@ -208,18 +208,25 @@ public class Player : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.tag == "Floor" ||
-            collision.gameObject.tag == "FirstPlayer" ||
-            collision.gameObject.tag == "SecondPlayer")
-        {
-            onGround = true;
-        }
-
         if ((collision.gameObject.tag == "FirstPlayer" ||
              collision.gameObject.tag == "SecondPlayer") &&
              transform.position.y < matePlayer.transform.position.y)
         {
             underMate = true;
+        }
+
+        if (collision.gameObject.tag == "Floor" ||
+            collision.gameObject.tag == "FirstPlayer" ||
+            collision.gameObject.tag == "SecondPlayer")
+        {
+            if (underMate && collision.gameObject.tag == "Floor")
+            {
+                onGround = true;
+            }
+            else if(!underMate)
+            {
+                onGround = true;
+            }
         }
     }
 
