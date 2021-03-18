@@ -20,7 +20,7 @@ public class Player : MonoBehaviour
 
     private int startLane;
     private int currentLane;
-    private double DIST_FROM_CAMERA = -11.5;
+    private double DIST_FROM_CAMERA = 11.5;
 
     private bool onGround;
     private bool underMate;
@@ -35,9 +35,7 @@ public class Player : MonoBehaviour
         setPlayerStartPosition();
         setPLayerInputKeys();
         setMatePlayer();
-        DIST_FROM_CAMERA = Math.Abs(GameObject.FindGameObjectWithTag("MainCamera").transform.position.z - transform.position.z);
         lives = 3;
-        
     }
 
     private void setPlayerStartPosition() {
@@ -104,6 +102,10 @@ public class Player : MonoBehaviour
     public int getCurrentLane()
     {
         return currentLane;
+    }
+
+    public void setCurrentLane(int lane) {
+        currentLane = lane;
     }
 
     public void changeLane()
@@ -175,6 +177,11 @@ public class Player : MonoBehaviour
             }
         }
     }
+
+    public int getStartLane() {
+        return startLane; 
+    }
+
     private void checkIfAboveHole()
     {
         if (transform.position.y < 0.45)
@@ -185,13 +192,36 @@ public class Player : MonoBehaviour
 
     private bool IsLostLife()
     {
-        if (golaneala == 0)
+        float cameraZ = GameObject.FindGameObjectWithTag("MainCamera").transform.position.z;
+        float playerZ = transform.position.z;
+        if (golaneala < 1)
         {
-            golaneala = 1;
-            Debug.Log(playerTag + ":" + Math.Abs(DIST_FROM_CAMERA + (GameObject.FindGameObjectWithTag("MainCamera").transform.position.z - transform.position.z)));
-            Debug.Log(playerTag + ":" + (Math.Abs(DIST_FROM_CAMERA + (GameObject.FindGameObjectWithTag("MainCamera").transform.position.z - transform.position.z)) > 1.0));
+            golaneala += 1;
+            Debug.Log(playerTag + ":" + (DIST_FROM_CAMERA - Math.Abs(cameraZ - playerZ)));
+            Debug.Log(playerTag + ":" + (DIST_FROM_CAMERA - Math.Abs(cameraZ - playerZ) > 2.0));
+        
         }
-        return Math.Abs(DIST_FROM_CAMERA + (GameObject.FindGameObjectWithTag("MainCamera").transform.position.z - transform.position.z)) > 1.0;
+        return (DIST_FROM_CAMERA - Math.Abs(cameraZ - playerZ)) > 2.0;
+    }
+
+    private void respawnPlayers()
+    {
+        Vector3 respawnPosition = new Vector3(gameManager.floor.GetComponent<Lane>().lanesMiddles[startLane],
+                                              Constants.PLAYERS_INIT_Y,
+                                              Constants.PLAYERS_INIT_Z);
+        setPlayerPosition(respawnPosition);
+        setCurrentLane(startLane);
+
+
+        int matePlayerStartLane = matePlayer.GetComponent<Player>().getStartLane();
+        respawnPosition.x = matePlayerStartLane;
+        matePlayer.GetComponent<Player>().setPlayerPosition(respawnPosition);
+        matePlayer.GetComponent<Player>().setCurrentLane(matePlayerStartLane);
+
+        GameObject.FindGameObjectWithTag("MainCamera").transform.position = new Vector3(Constants.CAMERA_INIT_X,
+                                                                                        Constants.CAMERA_INIT_Y,
+                                                                                        Constants.CAMERA_INIT_Z);
+
     }
 
     private void checkIfLostLife()
@@ -204,18 +234,9 @@ public class Player : MonoBehaviour
             }
             else
             {
-                lives--;
                 Debug.Log("Ai pierdut o viata fraiere " + playerTag);
-                Vector3 newPosition = new Vector3(gameManager.floor.GetComponent<Lane>().lanesMiddles[currentLane],
-                                                  2.4f,
-                                                  -37f);
-
-                setPlayerPosition(newPosition);
-
-                newPosition.x = matePlayer.transform.position.x;
-                matePlayer.GetComponent<Player>().setPlayerPosition(newPosition);
-
-                GameObject.FindGameObjectWithTag("MainCamera").transform.position = new Vector3(0, 5.4f, -48.6f);
+                lives--;
+                respawnPlayers();
             }
         }
     }
