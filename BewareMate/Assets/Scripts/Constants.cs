@@ -22,4 +22,11 @@ public class Constants : MonoBehaviour
     public const int SHUFFLE_ITERATIONS = 20;
     public const int FLOOR_LENGTH = 40;
 
+    public const float CAMERA_INIT_X = 0.0f;
+    public const float CAMERA_INIT_Y = 5.4f;
+    public const float CAMERA_INIT_Z = -48.6f;
+
+    public const float PLAYERS_INIT_Y = 2.4f;
+    public const float PLAYERS_INIT_Z = -37f;
+
 }
