@@ -7,6 +7,12 @@ TagManager:
   - FirstPlayer
   - SecondPlayer
   - Floor
+  - FirstPlayer_0
+  - FirstPlayer_1
+  - FirstPlayer_2
+  - SecondPlayer_0
+  - SecondPlayer_1
+  - SecondPlayer_2
   layers:
   - Default
   - TransparentFX

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.SceneManagement;
 using UnityEngine;
 
 public class Player : MonoBehaviour
@@ -10,7 +11,6 @@ public class Player : MonoBehaviour
     public string playerTag = "";
     public float jumpHigh = 10f;
 
-    private int golaneala = 0;
     private int lives;
     private int leftKeyCode;
     private int rightKeyCode;
@@ -24,6 +24,7 @@ public class Player : MonoBehaviour
 
     private bool onGround;
     private bool underMate;
+    private bool isDead = false; 
     private Rigidbody playerRigidBody;
 
 
@@ -90,6 +91,10 @@ public class Player : MonoBehaviour
         return transform.position.y < 0.0;
     }
 
+    public bool getIsDead() {
+        return isDead;
+    }
+
     public void moveForward()
     {
         if (!IsInHole())
@@ -117,7 +122,8 @@ public class Player : MonoBehaviour
                             currentLane != 0 && 
                             (currentLane - 1 != matePlayer.GetComponent<Player>().currentLane || 
                             (onGround && !matePlayer.GetComponent<Player>().onGround) || 
-                            (!onGround && matePlayer.GetComponent<Player>().onGround)))
+                            (!onGround && matePlayer.GetComponent<Player>().onGround) ||
+                             matePlayer.GetComponent<Player>().getIsDead()))
         {
             if (underMate)
             {
@@ -134,7 +140,8 @@ public class Player : MonoBehaviour
                                  currentLane != 3 &&
                                  (currentLane + 1 != matePlayer.GetComponent<Player>().currentLane || 
                                  (onGround && !matePlayer.GetComponent<Player>().onGround) || 
-                                 (!onGround && matePlayer.GetComponent<Player>().onGround)))
+                                 (!onGround && matePlayer.GetComponent<Player>().onGround) ||
+                                  matePlayer.GetComponent<Player>().getIsDead()))
         {
             if (underMate)
             {
@@ -194,60 +201,58 @@ public class Player : MonoBehaviour
     {
         float cameraZ = GameObject.FindGameObjectWithTag("MainCamera").transform.position.z;
         float playerZ = transform.position.z;
-        if (golaneala < 1)
-        {
-            golaneala += 1;
-            Debug.Log(playerTag + ":" + (DIST_FROM_CAMERA - Math.Abs(cameraZ - playerZ)));
-            Debug.Log(playerTag + ":" + (DIST_FROM_CAMERA - Math.Abs(cameraZ - playerZ) > 2.0));
-        
-        }
         return (DIST_FROM_CAMERA - Math.Abs(cameraZ - playerZ)) > 2.0;
     }
 
     private void respawnPlayers()
     {
+
+        GameObject.FindGameObjectWithTag("MainCamera").transform.position = new Vector3(Constants.CAMERA_INIT_X,
+                                                                                           Constants.CAMERA_INIT_Y,
+                                                                                           Constants.CAMERA_INIT_Z);
+
         Vector3 respawnPosition = new Vector3(gameManager.floor.GetComponent<Lane>().lanesMiddles[startLane],
                                               Constants.PLAYERS_INIT_Y,
                                               Constants.PLAYERS_INIT_Z);
         setPlayerPosition(respawnPosition);
         setCurrentLane(startLane);
 
-
-        int matePlayerStartLane = matePlayer.GetComponent<Player>().getStartLane();
-        respawnPosition.x = matePlayerStartLane;
-        matePlayer.GetComponent<Player>().setPlayerPosition(respawnPosition);
-        matePlayer.GetComponent<Player>().setCurrentLane(matePlayerStartLane);
-
-        GameObject.FindGameObjectWithTag("MainCamera").transform.position = new Vector3(Constants.CAMERA_INIT_X,
-                                                                                        Constants.CAMERA_INIT_Y,
-                                                                                        Constants.CAMERA_INIT_Z);
+        if (!matePlayer.GetComponent<Player>().getIsDead())
+        {
+            int matePlayerStartLane = matePlayer.GetComponent<Player>().getStartLane();
+            respawnPosition.x = gameManager.floor.GetComponent<Lane>().lanesMiddles[matePlayerStartLane];
+            matePlayer.GetComponent<Player>().setPlayerPosition(respawnPosition);
+            matePlayer.GetComponent<Player>().setCurrentLane(matePlayerStartLane);
+        }
 
     }
 
     private void checkIfLostLife()
     {
-        if(IsLostLife())
+        if(IsLostLife() && lives != 0)
         {
-            if(lives == 1)
+
+            string hearthStr = playerTag + "_" + Convert.ToString(3 - lives);
+            Debug.Log(hearthStr);
+            GameObject hearth = GameObject.FindGameObjectWithTag(hearthStr);
+            hearth.SetActive(false);
+
+            if (lives == 1)
             {
-                Debug.Log("Ai pierdut fraiere " + playerTag);
+                Debug.Log("You lost" + playerTag);
+                isDead = true;
+                if (matePlayer.GetComponent<Player>().getIsDead()) {
+                    SceneManager.LoadScene(2);
+                }
             }
+
             else
-            {
-                Debug.Log("Ai pierdut o viata fraiere " + playerTag);
-                lives--;
+            {    
+                Debug.Log("You lost one life" + playerTag);
                 respawnPlayers();
             }
-        }
-    }
 
-    private void checkIfOneIsBehind()
-    {
-        if(transform.position.y != matePlayer.GetComponent<Player>().transform.position.y)
-        {
-            float maxZ = Math.Max(transform.position.z, matePlayer.GetComponent<Player>().transform.position.z);
-            transform.position = moveToZ(maxZ);
-            matePlayer.GetComponent<Player>().transform.position = matePlayer.GetComponent<Player>().moveToZ(maxZ);
+            lives--;
         }
     }
 

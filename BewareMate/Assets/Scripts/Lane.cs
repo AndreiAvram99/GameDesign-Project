@@ -5,12 +5,18 @@ using UnityEngine;
 public class Lane : MonoBehaviour
 {
     public float[] lanesMiddles = new float[4];
-    
+    public List<GameObject> traps;
+    public string trapsType;
+
+
+    public void generateTraps() {
+        
+    }
+
     public void setLanesMiddles()
     {
         float laneDimension = 18 / 4;
-        /*float laneDimension = transform.localScale[Constants.Z] / 4;*/
-
+   
         for (int i = 0; i < lanesMiddles.Length; i++)
         {
             if (i < 2)
