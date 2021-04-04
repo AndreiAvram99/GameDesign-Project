@@ -1,5 +1,7 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -17,13 +19,15 @@ public class GameManager : MonoBehaviour
         // textScore = GameObject.Find("Score").GetComponent<Text>();
         StartCoroutine(time());
     }
+    
+    
+    
     IEnumerator time()
     {
         while (true)
         {
             timeCount();
-            // DE SETAT score la acel text "Score: [score]"
-            // Debug.Log(textScore);
+            GameObject.FindGameObjectWithTag("Score").GetComponent<TextMeshProUGUI>().text = "Score\n" + score;
             yield return new WaitForSeconds(1);
         }
     }

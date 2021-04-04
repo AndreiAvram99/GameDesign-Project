@@ -87,13 +87,17 @@ public class FloorGenerator : MonoBehaviour
     }
 
 
-    private void resetPositions(GameObject gameObject)
+    private void resetPositions(GameObject movableObject)
     {
-        var position = gameObject.transform.position;
-        position = new Vector3(position[Constants.X],
-                               position[Constants.Y],
-                               position[Constants.Z] - Constants.FloorLength);
-        gameObject.transform.position = position;
+        bool dontMove = !movableObject.CompareTag("MainCamera") && movableObject.GetComponent<Player>().getIsDead();
+        if (!dontMove)
+        {
+            var position = movableObject.transform.position;
+            position = new Vector3(position[Constants.X],
+                position[Constants.Y],
+                position[Constants.Z] - Constants.FloorLength);
+            movableObject.transform.position = position;
+        }
     }
 
     private void checkPlayers() {
@@ -103,7 +107,6 @@ public class FloorGenerator : MonoBehaviour
             resetPositions(mainCamera);
             resetPositions(firstPlayer);
             resetPositions(secondPlayer);
-           
             replaceFirstCurrentFloor();
         }
     }

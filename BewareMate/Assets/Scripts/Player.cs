@@ -96,7 +96,7 @@ public class Player : MonoBehaviour
 
     public void moveForward()
     {
-        if (!isInHole())
+        if (!isInHole() && !isDead)
         {
             Vector3 transformPosition = gameManager.moveVector * (gameManager.moveSpeed * Time.deltaTime);
             transform.Translate(transformPosition);
@@ -240,6 +240,7 @@ public class Player : MonoBehaviour
             {
                 Debug.Log("You lost" + playerTag);
                 isDead = true;
+                this.transform.position = new Vector3(-40f, 10f, -15f);
                 if (matePlayer.GetComponent<Player>().getIsDead()) {
                     SceneManager.LoadScene(2);
                 }
@@ -315,9 +316,9 @@ public class Player : MonoBehaviour
 
     void Update()
     {
+        moveForward();
         checkIfAboveHole();
         checkIfLostLife();
-        moveForward();
         changeLane();
         jump();
     }
