@@ -5,8 +5,6 @@ using UnityEngine;
 public class Lane : MonoBehaviour
 {
     public float[] lanesMiddles = new float[4];
-    public List<GameObject> traps;
-    public string trapsType;
 
 
     public void generateTraps() {

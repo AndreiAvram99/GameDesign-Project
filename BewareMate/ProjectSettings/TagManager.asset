@@ -13,6 +13,7 @@ TagManager:
   - SecondPlayer_0
   - SecondPlayer_1
   - SecondPlayer_2
+  - FloorsManager
   layers:
   - Default
   - TransparentFX

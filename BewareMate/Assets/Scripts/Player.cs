@@ -20,7 +20,6 @@ public class Player : MonoBehaviour
 
     private int startLane;
     private int currentLane;
-    private double DIST_FROM_CAMERA = 11.5;
 
     private bool onGround;
     private bool underMate;
@@ -50,8 +49,8 @@ public class Player : MonoBehaviour
 
     private void setPlayerStartLane()
     {
-        if (playerTag == "FirstPlayer") startLane = Constants.FIRST_PLAYER_POSITION_INDEX;
-        else startLane = Constants.SECOND_PLAYER_POSITION_INDEX;
+        if (playerTag == "FirstPlayer") startLane = Constants.FirstPlayerPositionIndex;
+        else startLane = Constants.SecondPlayerPositionIndex;
         currentLane = startLane;
     }
 
@@ -62,16 +61,16 @@ public class Player : MonoBehaviour
 
     private void setFirstPlayerKeys()
     {
-        leftKeyCode = Constants.A_KEYCODE;
-        rightKeyCode = Constants.D_KEYCODE;
-        upKeyCode = Constants.W_KEYCODE;
+        leftKeyCode = Constants.AKeycode;
+        rightKeyCode = Constants.DKeycode;
+        upKeyCode = Constants.WKeycode;
     }
 
     private void setSecondPlayerKeys()
     {
-        leftKeyCode = Constants.LEFT_ARROW_KEYCODE;
-        rightKeyCode = Constants.RIGHT_ARROW_KEYCODE;
-        upKeyCode = Constants.UP_ARROW_KEYCODE;
+        leftKeyCode = Constants.LeftArrowKeycode;
+        rightKeyCode = Constants.RightArrowKeycode;
+        upKeyCode = Constants.UpArrowKeycode;
     }
 
     private void setMatePlayer() {
@@ -86,7 +85,7 @@ public class Player : MonoBehaviour
         transform.position = positionVector;
     }
 
-    public bool IsInHole()
+    public bool isInHole()
     {
         return transform.position.y < 0.0;
     }
@@ -97,9 +96,9 @@ public class Player : MonoBehaviour
 
     public void moveForward()
     {
-        if (!IsInHole())
+        if (!isInHole())
         {
-            Vector3 transformPosition = gameManager.moveVector * gameManager.moveSpeed * Time.deltaTime;
+            Vector3 transformPosition = gameManager.moveVector * (gameManager.moveSpeed * Time.deltaTime);
             transform.Translate(transformPosition);
         }
     }
@@ -197,23 +196,23 @@ public class Player : MonoBehaviour
         }
     }
 
-    private bool IsLostLife()
+    private bool isLostLife()
     {
         float cameraZ = GameObject.FindGameObjectWithTag("MainCamera").transform.position.z;
         float playerZ = transform.position.z;
-        return (DIST_FROM_CAMERA - Math.Abs(cameraZ - playerZ)) > 2.0;
+        return (Constants.DistFromCamera - Math.Abs(cameraZ - playerZ)) > 2.0;
     }
 
     private void respawnPlayers()
     {
 
-        GameObject.FindGameObjectWithTag("MainCamera").transform.position = new Vector3(Constants.CAMERA_INIT_X,
-                                                                                           Constants.CAMERA_INIT_Y,
-                                                                                           Constants.CAMERA_INIT_Z);
+        GameObject.FindGameObjectWithTag("MainCamera").transform.position = new Vector3(Constants.CameraInitX,
+                                                                                           Constants.CameraInitY,
+                                                                                           Constants.CameraInitZ);
 
         Vector3 respawnPosition = new Vector3(gameManager.floor.GetComponent<Lane>().lanesMiddles[startLane],
-                                              Constants.PLAYERS_INIT_Y,
-                                              Constants.PLAYERS_INIT_Z);
+                                              Constants.PlayersInitY,
+                                              Constants.PlayersInitZ);
         setPlayerPosition(respawnPosition);
         setCurrentLane(startLane);
 
@@ -229,7 +228,7 @@ public class Player : MonoBehaviour
 
     private void checkIfLostLife()
     {
-        if(IsLostLife() && lives != 0)
+        if(isLostLife() && lives != 0)
         {
 
             string hearthStr = playerTag + "_" + Convert.ToString(3 - lives);
@@ -249,6 +248,8 @@ public class Player : MonoBehaviour
             else
             {    
                 Debug.Log("You lost one life" + playerTag);
+                GameObject FloorsManager = GameObject.FindGameObjectWithTag("FloorsManager");
+                FloorsManager.GetComponent<FloorGenerator>().resetStart();
                 respawnPlayers();
             }
 

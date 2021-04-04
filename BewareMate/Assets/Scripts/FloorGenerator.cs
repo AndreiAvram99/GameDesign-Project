@@ -10,10 +10,11 @@ public class FloorGenerator : MonoBehaviour
     public GameObject mainCamera;
     private List<GameObject> availableFloors = new List<GameObject>();
     private List<GameObject> currentFloors = new List<GameObject>();
-
+    private GameObject startFloor;
+    
     private void shuffle(List<GameObject> list)
     {
-        for (int i = 0; i <= Constants.SHUFFLE_ITERATIONS; i++) {
+        for (int i = 0; i <= Constants.ShuffleIterations; i++) {
             int fIndex = Random.Range(0, list.Count);
             int sIndex = Random.Range(0, list.Count);
             GameObject aux = list[fIndex];
@@ -35,7 +36,7 @@ public class FloorGenerator : MonoBehaviour
         int index = 0;
         foreach (GameObject currentFloor in currentFloors)
         {
-            currentFloor.transform.position = new Vector3(0, 0, Constants.FLOOR_LENGTH * index);
+            currentFloor.transform.position = new Vector3(0, 0, Constants.FloorLength * index);
             index += 1;
         }
     }
@@ -43,13 +44,14 @@ public class FloorGenerator : MonoBehaviour
     private void setPositionsForAvailableFloors() {
         int index = 0;
         foreach (GameObject availableFloor in availableFloors) {
-            availableFloor.transform.position = new Vector3(100, 0, Constants.FLOOR_LENGTH * index);
+            availableFloor.transform.position = new Vector3(100, 0, Constants.FloorLength * index);
             index += 1;
         }
     }
 
     private void replaceFirstCurrentFloor() {
         GameObject saveFloor = currentFloors[0];
+        currentFloors[0].transform.position = new Vector3(200, 0, 0);
         currentFloors.RemoveAt(0);
         shuffle(availableFloors);
         currentFloors.Add(availableFloors[0]);
@@ -58,11 +60,19 @@ public class FloorGenerator : MonoBehaviour
         setPositionsForAvailableFloors();
     }
 
+    public void resetStart()
+    {
+        currentFloors[0] = startFloor;
+        createAvailableFloors();
+        setPositionsForCurrentFloors();
+        setPositionsForAvailableFloors();  
+    }
 
     private void initCurrentFloors()
     {
-        shuffle(floors);
         currentFloors.Add(floors[0]);
+        floors.RemoveAt(0);
+        shuffle(floors);
         currentFloors.Add(floors[1]);
         currentFloors.Add(floors[2]);
         createAvailableFloors();
@@ -72,15 +82,18 @@ public class FloorGenerator : MonoBehaviour
 
     void Start()
     {
+        startFloor = floors[0];
         initCurrentFloors();
     }
 
 
-    private void resetPositions(GameObject gameObject) {
-        gameObject.transform.position = new Vector3(gameObject.transform.position[Constants.X],
-                                                    gameObject.transform.position[Constants.Y],
-                                                    gameObject.transform.position[Constants.Z] - Constants.FLOOR_LENGTH);
-
+    private void resetPositions(GameObject gameObject)
+    {
+        var position = gameObject.transform.position;
+        position = new Vector3(position[Constants.X],
+                               position[Constants.Y],
+                               position[Constants.Z] - Constants.FloorLength);
+        gameObject.transform.position = position;
     }
 
     private void checkPlayers() {
