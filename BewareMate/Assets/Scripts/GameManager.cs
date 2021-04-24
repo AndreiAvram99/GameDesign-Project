@@ -7,8 +7,9 @@ using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
-    public float moveSpeed = 1.0f;
+    public float moveSpeed = 8.0f;
     public Vector3 moveVector;
+    public float jumpHigh = 10f;
     public GameObject floor;
 
     public static Text textScore;
@@ -17,22 +18,29 @@ public class GameManager : MonoBehaviour
     public void Start()
     {
         // textScore = GameObject.Find("Score").GetComponent<Text>();
-        StartCoroutine(time());
+        StartCoroutine(scoreCoroutine());
+        StartCoroutine(speedCoroutine());
     }
     
     
     
-    IEnumerator time()
+    IEnumerator scoreCoroutine()
     {
         while (true)
         {
-            timeCount();
+            score += 1;
             GameObject.FindGameObjectWithTag("Score").GetComponent<TextMeshProUGUI>().text = "Score\n" + score;
             yield return new WaitForSeconds(1);
         }
     }
-    void timeCount()
+
+    IEnumerator speedCoroutine()
     {
-        score += 1;
+        while(true)
+        {
+           // moveSpeed = Math.Min(Constants.MAX_SPEED, moveSpeed + 1.5f);
+            Debug.Log(moveSpeed + "LOL VITEZA");
+            yield return new WaitForSeconds(5);
+        }
     }
 }

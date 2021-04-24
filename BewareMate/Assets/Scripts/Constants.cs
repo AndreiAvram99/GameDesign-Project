@@ -33,4 +33,6 @@ public class Constants : MonoBehaviour
     
     public const float FloatComparisonEps = 0.0000001f;
 
+    public const float MAX_SPEED = 20f;
+
 }

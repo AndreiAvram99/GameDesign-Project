@@ -1,0 +1,11 @@
+Pastrare scoruri - Danutzu
+Obstacole care sa oblige sa mearga separat + gropi lungi pt viteza - Andreiu
+de facut un tutorial - Danutzu
+smooth intre lane-uri - Andreiu
+Caractere noi - Andreiu
+(SA INCERCAM SA FACEM IN RETEA?) - Doar after party
+
+Bugs:
+ramane unu in urma (idk why)
+de vazut de ce trece prin perete(?) uneori - Andreiu
+GetObjectBy... consuma mult (DANI IA SI REZOLVA) - Danutzu

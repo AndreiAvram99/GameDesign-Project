@@ -9,7 +9,6 @@ public class Player : MonoBehaviour
     GameManager gameManager;
 
     public string playerTag = "";
-    public float jumpHigh = 10f;
 
     private int lives;
     private int leftKeyCode;
@@ -87,7 +86,7 @@ public class Player : MonoBehaviour
 
     public bool isInHole()
     {
-        return transform.position.y < 0.0;
+        return transform.position.y < 0.75;
     }
 
     public bool getIsDead() {
@@ -119,6 +118,7 @@ public class Player : MonoBehaviour
 
         if (Input.GetKeyUp((KeyCode)leftKeyCode) &&
                             currentLane != 0 && 
+                            !isInHole() &&
                             (currentLane - 1 != matePlayer.GetComponent<Player>().currentLane || 
                             (onGround && !matePlayer.GetComponent<Player>().onGround) || 
                             (!onGround && matePlayer.GetComponent<Player>().onGround) ||
@@ -137,6 +137,7 @@ public class Player : MonoBehaviour
 
         else if (Input.GetKeyUp((KeyCode)rightKeyCode) &&
                                  currentLane != 3 &&
+                                 !isInHole() &&
                                  (currentLane + 1 != matePlayer.GetComponent<Player>().currentLane || 
                                  (onGround && !matePlayer.GetComponent<Player>().onGround) || 
                                  (!onGround && matePlayer.GetComponent<Player>().onGround) ||
@@ -178,6 +179,13 @@ public class Player : MonoBehaviour
         {
             if (Input.GetKeyDown((KeyCode)upKeyCode))
             {
+                float jumpHigh = gameManager.jumpHigh;
+
+                if(underMate)
+                {
+                    jumpHigh *= 1.5f;
+                }
+
                 playerRigidBody.velocity = new Vector3(0f, jumpHigh, 0f);
                 onGround = false;
             }
