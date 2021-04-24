@@ -6,7 +6,13 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    GameManager gameManager;
+    public GameManager gameManager;
+    public GameObject matePlayer;
+    public GameObject mainCamera;
+    public GameObject floorsManager;
+    private FloorGenerator floorGenerator;
+    private Player matePlayerScript;
+    private Lane laneScript;
 
     public string playerTag = "";
 
@@ -14,8 +20,6 @@ public class Player : MonoBehaviour
     private int leftKeyCode;
     private int rightKeyCode;
     private int upKeyCode;
-
-    private GameObject matePlayer;
 
     private int startLane;
     private int currentLane;
@@ -25,7 +29,6 @@ public class Player : MonoBehaviour
     private bool isDead = false; 
     private Rigidbody playerRigidBody;
 
-
     private void initPlayer()
     {
         onGround = true;
@@ -33,14 +36,13 @@ public class Player : MonoBehaviour
         setPlayerStartLane();
         setPlayerStartPosition();
         setPLayerInputKeys();
-        setMatePlayer();
         lives = 3;
     }
 
     private void setPlayerStartPosition() {
         gameManager.floor.GetComponent<Lane>().setLanesMiddles();
 
-        Vector3 startPositionVector = new Vector3(gameManager.floor.GetComponent<Lane>().lanesMiddles[startLane],
+        Vector3 startPositionVector = new Vector3(laneScript.lanesMiddles[startLane],
                                                   transform.position[Constants.Y],
                                                   transform.position[Constants.Z]);
         setPlayerPosition(startPositionVector);
@@ -70,13 +72,6 @@ public class Player : MonoBehaviour
         leftKeyCode = Constants.LeftArrowKeycode;
         rightKeyCode = Constants.RightArrowKeycode;
         upKeyCode = Constants.UpArrowKeycode;
-    }
-
-    private void setMatePlayer() {
-        if (playerTag == "FirstPlayer") 
-            matePlayer = GameObject.FindGameObjectWithTag("SecondPlayer");
-        else
-            matePlayer = GameObject.FindGameObjectWithTag("FirstPlayer");
     }
 
     public void setPlayerPosition(Vector3 positionVector)
@@ -119,15 +114,15 @@ public class Player : MonoBehaviour
         if (Input.GetKeyUp((KeyCode)leftKeyCode) &&
                             currentLane != 0 && 
                             !isInHole() &&
-                            (currentLane - 1 != matePlayer.GetComponent<Player>().currentLane || 
-                            (onGround && !matePlayer.GetComponent<Player>().onGround) || 
-                            (!onGround && matePlayer.GetComponent<Player>().onGround) ||
-                             matePlayer.GetComponent<Player>().getIsDead()))
+                            (currentLane - 1 != matePlayerScript.currentLane || 
+                            (onGround && !matePlayerScript.onGround) || 
+                            (!onGround && matePlayerScript.onGround) ||
+                             matePlayerScript.getIsDead()))
         {
             if (underMate)
             {
                 moveMate = true;
-                matePlayer.GetComponent<Player>().currentLane -= 1;
+                matePlayerScript.currentLane -= 1;
             }
 
             currentLane -= 1;
@@ -138,15 +133,15 @@ public class Player : MonoBehaviour
         else if (Input.GetKeyUp((KeyCode)rightKeyCode) &&
                                  currentLane != 3 &&
                                  !isInHole() &&
-                                 (currentLane + 1 != matePlayer.GetComponent<Player>().currentLane || 
-                                 (onGround && !matePlayer.GetComponent<Player>().onGround) || 
-                                 (!onGround && matePlayer.GetComponent<Player>().onGround) ||
-                                  matePlayer.GetComponent<Player>().getIsDead()))
+                                 (currentLane + 1 != matePlayerScript.currentLane || 
+                                 (onGround && !matePlayerScript.onGround) || 
+                                 (!onGround && matePlayerScript.onGround) ||
+                                  matePlayerScript.getIsDead()))
         {
             if (underMate)
             {
                 moveMate = true;
-                matePlayer.GetComponent<Player>().currentLane += 1;
+                matePlayerScript.currentLane += 1;
             }
 
             currentLane += 1;
@@ -156,7 +151,7 @@ public class Player : MonoBehaviour
 
         if (moveFlag)
         {
-            Vector3 playerMoveDirectionVecotr = new Vector3(gameManager.floor.GetComponent<Lane>().lanesMiddles[currentLane],
+            Vector3 playerMoveDirectionVecotr = new Vector3(laneScript.lanesMiddles[currentLane],
                                                             transform.position[Constants.Y],
                                                             transform.position[Constants.Z]);
             setPlayerPosition(playerMoveDirectionVecotr);
@@ -166,10 +161,10 @@ public class Player : MonoBehaviour
         {
             int mateLane = matePlayer.GetComponent<Player>().currentLane;
 
-            Vector3 playerMoveDirectionVecotr = new Vector3(gameManager.floor.GetComponent<Lane>().lanesMiddles[mateLane],
-                                                            matePlayer.GetComponent<Player>().transform.position[Constants.Y],
-                                                            matePlayer.GetComponent<Player>().transform.position[Constants.Z]);
-            matePlayer.GetComponent<Player>().setPlayerPosition(playerMoveDirectionVecotr);
+            Vector3 playerMoveDirectionVecotr = new Vector3(laneScript.lanesMiddles[mateLane],
+                                                            matePlayerScript.transform.position[Constants.Y],
+                                                            matePlayerScript.transform.position[Constants.Z]);
+            matePlayerScript.setPlayerPosition(playerMoveDirectionVecotr);
         }
     }
 
@@ -206,7 +201,7 @@ public class Player : MonoBehaviour
 
     private bool isLostLife()
     {
-        float cameraZ = GameObject.FindGameObjectWithTag("MainCamera").transform.position.z;
+        float cameraZ = mainCamera.transform.position.z;
         float playerZ = transform.position.z;
         return (Constants.DistFromCamera - Math.Abs(cameraZ - playerZ)) > 2.0;
     }
@@ -214,22 +209,20 @@ public class Player : MonoBehaviour
     IEnumerator respawnPlayers()
     {
 
-        GameObject.FindGameObjectWithTag("MainCamera").transform.position = new Vector3(Constants.CameraInitX,
-                                                                                           Constants.CameraInitY,
-                                                                                           Constants.CameraInitZ);
+        mainCamera.transform.position = new Vector3(Constants.CameraInitX, Constants.CameraInitY, Constants.CameraInitZ);
 
-        Vector3 respawnPosition = new Vector3(gameManager.floor.GetComponent<Lane>().lanesMiddles[startLane],
+        Vector3 respawnPosition = new Vector3(laneScript.lanesMiddles[startLane],
                                               Constants.PlayersInitY,
                                               Constants.PlayersInitZ);
         setPlayerPosition(respawnPosition);
         setCurrentLane(startLane);
 
-        if (!matePlayer.GetComponent<Player>().getIsDead())
+        if (!matePlayerScript.getIsDead())
         {
-            int matePlayerStartLane = matePlayer.GetComponent<Player>().getStartLane();
-            respawnPosition.x = gameManager.floor.GetComponent<Lane>().lanesMiddles[matePlayerStartLane];
-            matePlayer.GetComponent<Player>().setPlayerPosition(respawnPosition);
-            matePlayer.GetComponent<Player>().setCurrentLane(matePlayerStartLane);
+            int matePlayerStartLane = matePlayerScript.getStartLane();
+            respawnPosition.x = laneScript.lanesMiddles[matePlayerStartLane];
+            matePlayerScript.setPlayerPosition(respawnPosition);
+            matePlayerScript.setCurrentLane(matePlayerStartLane);
         }
         
         yield return new WaitForSecondsRealtime(3);
@@ -250,7 +243,7 @@ public class Player : MonoBehaviour
                 Debug.Log("You lost" + playerTag);
                 isDead = true;
                 this.transform.position = new Vector3(-40f, 10f, -15f);
-                if (matePlayer.GetComponent<Player>().getIsDead()) {
+                if (matePlayerScript.getIsDead()) {
                     SceneManager.LoadScene(2);
                 }
             }
@@ -258,8 +251,7 @@ public class Player : MonoBehaviour
             else
             {    
                 Debug.Log("You lost one life" + playerTag);
-                GameObject FloorsManager = GameObject.FindGameObjectWithTag("FloorsManager");
-                FloorsManager.GetComponent<FloorGenerator>().resetStart();
+                floorGenerator.resetStart();
                 StartCoroutine(respawnPlayers());
             }
 
@@ -318,8 +310,9 @@ public class Player : MonoBehaviour
 
     void Start()
     {
-        GameObject gameController = GameObject.FindGameObjectWithTag("GameController");
-        gameManager = gameController.GetComponent<GameManager>();
+        matePlayerScript = matePlayer.GetComponent<Player>();
+        laneScript = gameManager.floor.GetComponent<Lane>();
+        floorGenerator = floorsManager.GetComponent<FloorGenerator>();
         initPlayer();
     }
 

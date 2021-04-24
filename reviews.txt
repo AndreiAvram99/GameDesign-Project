@@ -1,0 +1,16 @@
+Aftanase Cosmin
+Faina ideea, poti face ceva cu next-level sau ceva de genu dupa ce ii omori
+pe toti + sa ai niste health pointuri de unde poti procura viata
+Bug fain gasit: poti sa te impusti singur :D 
+Poti sa-l reproduci astfel: stai pe loc cu arma plina de gloante si trage fara sa misti directia pistolului
+La un moment dat pistolul se invarte 180 de grade si tragi in tine :D
+
+Stefan Petrovici
+Am incercat sa il pornesc, dar nu merge, idk why
+
+Dorin Miron
+Avea un bug ciudat ca nu puteam sa ma misc de pe loc si ma tot teleporta
+(Era doar un singur player - hostu)
+Dupa ce am murit de mai multe ori, arma facea distantare sociala fata de noi
+Ca in poza: https://imgur.com/a/Rc3mhbl
+Fain ca ai multe arme :D Bombele mi-au placut mult

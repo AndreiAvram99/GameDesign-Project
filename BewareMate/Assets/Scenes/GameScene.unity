@@ -411,8 +411,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f736c1fe7fbb2bc4fbb1c6ac232b5106, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  gameManager: {fileID: 1075390148}
+  matePlayer: {fileID: 1340436051}
+  mainCamera: {fileID: 963194225}
+  floorsManager: {fileID: 1201462241}
+  floorGenerator: {fileID: 0}
+  matePlayerScript: {fileID: 0}
+  laneScript: {fileID: 0}
   playerTag: FirstPlayer
-  jumpHigh: 10
 --- !u!1 &482403806 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 4734884549263426905, guid: 369ff684b57eb844fb94a01308c164c4,
@@ -1353,6 +1359,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   moveSpeed: 8
   moveVector: {x: 0, y: 0, z: 1}
+  jumpHigh: 10
   floor: {fileID: 3696076990779282482}
 --- !u!4 &1075390149
 Transform:
@@ -1635,8 +1642,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f736c1fe7fbb2bc4fbb1c6ac232b5106, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  gameManager: {fileID: 1075390148}
+  matePlayer: {fileID: 456717061}
+  mainCamera: {fileID: 963194225}
+  floorsManager: {fileID: 1201462241}
+  floorGenerator: {fileID: 0}
+  matePlayerScript: {fileID: 0}
+  laneScript: {fileID: 0}
   playerTag: SecondPlayer
-  jumpHigh: 10
 --- !u!1 &1361236753
 GameObject:
   m_ObjectHideFlags: 0
