@@ -1,23 +1,21 @@
 ﻿using System;
 using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
     public float moveSpeed = 8.0f;
     public Vector3 moveVector;
     public float jumpHigh = 10f;
-    public GameObject floor;
+    public GameObject lanesSeparator;
 
-    public static Text textScore;
-    public static int score = 0;
+    private static int _score;
+    private TextMeshProUGUI scoreText;
 
     public void Start()
     {
-        // textScore = GameObject.Find("Score").GetComponent<Text>();
+        scoreText = GameObject.FindGameObjectWithTag("Score").GetComponent<TextMeshProUGUI>();
         StartCoroutine(scoreCoroutine());
         StartCoroutine(speedCoroutine());
     }
@@ -28,19 +26,20 @@ public class GameManager : MonoBehaviour
     {
         while (true)
         {
-            score += 1;
-            GameObject.FindGameObjectWithTag("Score").GetComponent<TextMeshProUGUI>().text = "Score\n" + score;
+            _score += 1;
+            scoreText.text = "Score\n" + _score;
             yield return new WaitForSeconds(1);
         }
+        // ReSharper disable once IteratorNeverReturns
     }
 
     IEnumerator speedCoroutine()
     {
         while(true)
         {
-           // moveSpeed = Math.Min(Constants.MAX_SPEED, moveSpeed + 1.5f);
-            Debug.Log(moveSpeed + "LOL VITEZA");
+            moveSpeed = Math.Min(Constants.MaxSpeed, moveSpeed + 1.5f);
             yield return new WaitForSeconds(5);
         }
+        // ReSharper disable once IteratorNeverReturns
     }
 }

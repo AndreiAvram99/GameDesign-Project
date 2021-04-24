@@ -2,7 +2,7 @@
 
 public class Constants : MonoBehaviour
 {
-    public const int Lives = 3;
+    public const int NumberOfLivesPerPlayer = 3;
     public const int X = 0;
     public const int Y = 1;
     public const int Z = 2;
@@ -18,7 +18,7 @@ public class Constants : MonoBehaviour
     public const int SecondPlayerPositionIndex = 2;
 
     public const int ShuffleIterations = 20;
-    public const int FloorLength = 40;
+    public const float FloorLength = 40f;
 
     public const float CameraInitX = 0.0f;
     public const float CameraInitY = 5.4f;
@@ -31,8 +31,10 @@ public class Constants : MonoBehaviour
     public const float FenceStart = -10f;
     public const float FenceDifference = -20f;
     
-    public const float FloatComparisonEps = 0.0000001f;
 
-    public const float MAX_SPEED = 20f;
+    public const float MaxSpeed = 15f;
+
+    public const float FloorWidth = 18f;
+    public const float NumberOfLanes = 4f;
 
 }

@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class Lane : MonoBehaviour
 {
@@ -13,7 +11,7 @@ public class Lane : MonoBehaviour
 
     public void setLanesMiddles()
     {
-        float laneDimension = 18 / 4;
+        float laneDimension = Constants.FloorWidth / Constants.NumberOfLanes;
    
         for (int i = 0; i < lanesMiddles.Length; i++)
         {

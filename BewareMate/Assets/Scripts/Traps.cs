@@ -16,7 +16,6 @@ public class Traps : MonoBehaviour
         for (int counter = 0; counter < numberOfTrapsPerFloor; counter++)
         {
             int position = Random.Range(0, rightThreshold);
-            Debug.Log("random position: " +  position);
             trapsCopy.Add(Instantiate(traps[position], new Vector3(0, 0, 0), Quaternion.identity));
         }
     

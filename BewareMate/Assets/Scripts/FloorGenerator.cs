@@ -1,6 +1,8 @@
-﻿using System.Collections;
+﻿using System;
 using System.Collections.Generic;
+using JetBrains.Annotations;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class FloorGenerator : MonoBehaviour
 {
@@ -8,12 +10,15 @@ public class FloorGenerator : MonoBehaviour
     public GameObject firstPlayer;
     public GameObject secondPlayer;
     public GameObject mainCamera;
-    private List<GameObject> availableFloors = new List<GameObject>();
-    private List<GameObject> currentFloors = new List<GameObject>();
+    private readonly List<GameObject> availableFloors = new List<GameObject>();
+    private readonly List<GameObject> currentFloors = new List<GameObject>();
     private GameObject startFloor;
-    
-    private void shuffle(List<GameObject> list)
+    private Player firstPlayerScript;
+    private Player secondPlayerScript;
+
+    private void shuffle([NotNull] List<GameObject> list)
     {
+        if (list == null) throw new ArgumentNullException(nameof(list));
         for (int i = 0; i <= Constants.ShuffleIterations; i++) {
             int fIndex = Random.Range(0, list.Count);
             int sIndex = Random.Range(0, list.Count);
@@ -50,7 +55,6 @@ public class FloorGenerator : MonoBehaviour
     }
 
     private void replaceFirstCurrentFloor() {
-        GameObject saveFloor = currentFloors[0];
         currentFloors[0].transform.position = new Vector3(200, 0, 0);
         currentFloors.RemoveAt(0);
         shuffle(availableFloors);
@@ -83,30 +87,39 @@ public class FloorGenerator : MonoBehaviour
     void Start()
     {
         startFloor = floors[0];
+        firstPlayerScript = firstPlayer.GetComponent<Player>();
+        secondPlayerScript = secondPlayer.GetComponent<Player>();
         initCurrentFloors();
     }
-
-
-    private void resetPositions(GameObject movableObject)
+    
+    private static void resetPosition(GameObject movableObject)
     {
-        bool dontMove = !movableObject.CompareTag("MainCamera") && movableObject.GetComponent<Player>().getIsDead();
-        if (!dontMove)
+        var position = movableObject.transform.position;
+        position = new Vector3(position.x, position.y, position.z - Constants.FloorLength);
+        movableObject.transform.position = position;
+    }
+
+    private void resetPositions()
+    {
+        resetPosition(mainCamera);
+
+        if (!firstPlayerScript.isDead())
         {
-            var position = movableObject.transform.position;
-            position = new Vector3(position[Constants.X],
-                position[Constants.Y],
-                position[Constants.Z] - Constants.FloorLength);
-            movableObject.transform.position = position;
+            resetPosition(firstPlayer);
         }
+        
+        if (!secondPlayerScript.isDead())
+        {
+            resetPosition(secondPlayer);
+        }
+        
     }
 
     private void checkPlayers() {
         if (firstPlayer.transform.position[Constants.Z] >= 2 ||
            secondPlayer.transform.position[Constants.Z] >= 2) {
 
-            resetPositions(mainCamera);
-            resetPositions(firstPlayer);
-            resetPositions(secondPlayer);
+            resetPositions();
             replaceFirstCurrentFloor();
         }
     }
