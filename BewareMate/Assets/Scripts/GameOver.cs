@@ -7,7 +7,7 @@ public class GameOver : MonoBehaviour
 {
     public void onGoToMenu()
     {
-        SceneManager.LoadScene(1);
+        SceneManager.LoadScene(0);
     }
 
     

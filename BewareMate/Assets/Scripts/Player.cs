@@ -203,7 +203,7 @@ public class Player : MonoBehaviour
         return (Constants.DistFromCamera - Math.Abs(cameraZ - playerZ)) > 2.0;
     }
 
-    private void respawnPlayers()
+    IEnumerator respawnPlayers()
     {
 
         GameObject.FindGameObjectWithTag("MainCamera").transform.position = new Vector3(Constants.CameraInitX,
@@ -223,7 +223,8 @@ public class Player : MonoBehaviour
             matePlayer.GetComponent<Player>().setPlayerPosition(respawnPosition);
             matePlayer.GetComponent<Player>().setCurrentLane(matePlayerStartLane);
         }
-
+        
+        yield return new WaitForSecondsRealtime(3);
     }
 
     private void checkIfLostLife()
@@ -251,7 +252,7 @@ public class Player : MonoBehaviour
                 Debug.Log("You lost one life" + playerTag);
                 GameObject FloorsManager = GameObject.FindGameObjectWithTag("FloorsManager");
                 FloorsManager.GetComponent<FloorGenerator>().resetStart();
-                respawnPlayers();
+                StartCoroutine(respawnPlayers());
             }
 
             lives--;

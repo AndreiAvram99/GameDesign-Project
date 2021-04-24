@@ -7,7 +7,7 @@ public class MenuScript : MonoBehaviour
 {
     public void onPlay()
     {
-        SceneManager.LoadScene(0);
+        SceneManager.LoadScene(1);
     }
 
     public void onQuit()
