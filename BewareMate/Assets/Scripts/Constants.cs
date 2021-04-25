@@ -32,7 +32,7 @@ public class Constants : MonoBehaviour
     public const float FenceDifference = -20f;
     
 
-    public const float MaxSpeed = 15f;
+    public const float MaxSpeed = 25f;
 
     public const float FloorWidth = 18f;
     public const float NumberOfLanes = 4f;

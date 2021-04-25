@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using UnityEngine.SceneManagement;
 using UnityEngine;
 
@@ -182,18 +183,18 @@ public class Player : MonoBehaviour
         }
     }
     
-    public bool isDead() {
-        return dead;
-    }
-    
-    public bool isUnderMate()
+    private bool isUnderMate()
     {
         return underMate;
     }
 
-    public bool isOnGround()
+    private bool isOnGround()
     {
         return onGround;
+    }
+    
+    public bool isDead() {
+        return dead;
     }
 
 
@@ -217,7 +218,7 @@ public class Player : MonoBehaviour
 
                 if(isUnderMate())
                 {
-                    jumpHigh *= 1.5f;
+                    jumpHigh *= 2.0f;
                 }
 
                 playerRigidBody.velocity = new Vector3(0f, jumpHigh, 0f);
@@ -239,7 +240,6 @@ public class Player : MonoBehaviour
     {
         if(lostLife() && lives != 0)
         {
-
             string hearthStr = playerTag + "_" + Convert.ToString(3 - lives);
             GameObject hearth = GameObject.FindGameObjectWithTag(hearthStr);
             hearth.SetActive(false);
@@ -256,20 +256,35 @@ public class Player : MonoBehaviour
             else
             {    
                 floorGenerator.resetStart();
-                respawnPlayers();
+                StartCoroutine(respawnPlayers());
             }
-
             lives--;
         }
     }
 
-    private void respawnPlayers()
+
+    private void fixedZAxis()
     {
+        playerRigidBody.constraints = (RigidbodyConstraints) 122;
+        matePlayerScript.playerRigidBody.constraints = (RigidbodyConstraints) 122;
+    }
+
+    private void ofFixedZAxis()
+    {
+        playerRigidBody.constraints = (RigidbodyConstraints) 114;
+        matePlayerScript.playerRigidBody.constraints = (RigidbodyConstraints) 114;
+    }
+
+    private IEnumerator respawnPlayers()
+    {
+        gameManager.moveSpeed = 0;
+        fixedZAxis();
+        
         mainCamera.transform.position = new Vector3(Constants.CameraInitX, Constants.CameraInitY, Constants.CameraInitZ);
         
         Vector3 respawnPosition = new Vector3(laneScript.lanesMiddles[startLane],
-            Constants.PlayersInitY,
-            Constants.PlayersInitZ);
+                                                Constants.PlayersInitY,
+                                                Constants.PlayersInitZ);
         setPlayerPosition(respawnPosition);
         setCurrentLane(startLane);
         
@@ -280,6 +295,12 @@ public class Player : MonoBehaviour
             matePlayerScript.setPlayerPosition(respawnPosition);
             matePlayerScript.setCurrentLane(matePlayerStartLane);
         }
+
+       
+        yield return new WaitForSeconds(0.5f);
+        
+        gameManager.moveSpeed = 8;
+        ofFixedZAxis();
     }
 
     
@@ -343,7 +364,6 @@ public class Player : MonoBehaviour
         setPlayerInputKeys();
         setMiddles();
         setPlayerStartPosition();
-        
     }
 
     void Update()
