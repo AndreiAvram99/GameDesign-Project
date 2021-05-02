@@ -5,7 +5,16 @@ public class MenuScript : MonoBehaviour
 {
     public void onPlay()
     {
-        SceneManager.LoadScene(1);
+        SceneManager.LoadScene(Constants.GAME_SCENE);
+    }
+    public void onHelp()
+    {
+        SceneManager.LoadScene(Constants.HELP_SCENE);
+    }
+
+    public void onGoToMenu()
+    {
+        SceneManager.LoadScene(Constants.MENU_SCENE);
     }
 
     public void onQuit()

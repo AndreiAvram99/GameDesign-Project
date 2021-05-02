@@ -249,7 +249,7 @@ public class Player : MonoBehaviour
                 dead = true;
                 this.transform.position = new Vector3(-40f, 10f, -15f);
                 if (matePlayerScript.isDead()) {
-                    SceneManager.LoadScene(2);
+                    SceneManager.LoadScene(Constants.GAME_OVER_SCENE);
                 }
             }
 

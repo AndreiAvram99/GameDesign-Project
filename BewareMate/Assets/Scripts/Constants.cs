@@ -37,4 +37,9 @@ public class Constants : MonoBehaviour
     public const float FloorWidth = 18f;
     public const float NumberOfLanes = 4f;
 
+
+    public const int MENU_SCENE = 0;
+    public const int GAME_SCENE = 1;
+    public const int GAME_OVER_SCENE = 2;
+    public const int HELP_SCENE = 3;
 }
