@@ -1,0 +1,10 @@
+Dummy1,Dummy2,36
+Dummy1,Dummy2,33
+Dummy1,Dummy2,33
+Dummy1,Dummy2,30
+-,-,0
+-,-,0
+-,-,0
+-,-,0
+-,-,0
+-,-,0

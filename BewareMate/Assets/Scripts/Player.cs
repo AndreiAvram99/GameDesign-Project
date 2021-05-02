@@ -8,11 +8,13 @@ public class Player : MonoBehaviour
     public GameManager gameManager;
     public GameObject matePlayer;
     public GameObject mainCamera;
+    public GameObject scoreManager;
     public GameObject floorsManager;
     public string playerTag = "";
     
     private FloorGenerator floorGenerator;
     private Player matePlayerScript;
+    private ScoreScript scoreScript;
     private Lane laneScript;
     
     private int lives;
@@ -35,6 +37,11 @@ public class Player : MonoBehaviour
     private void setFloorGenerator()
     {
         floorGenerator = floorsManager.GetComponent<FloorGenerator>();
+    }
+
+    private void setScoreScript()
+    {
+        scoreScript = scoreManager.GetComponent<ScoreScript>();
     }
 
     private void setMatePlayerScript()
@@ -249,6 +256,7 @@ public class Player : MonoBehaviour
                 dead = true;
                 this.transform.position = new Vector3(-40f, 10f, -15f);
                 if (matePlayerScript.isDead()) {
+                    scoreScript.addScore("Dummy1", "Dummy2", gameManager.getScore());
                     SceneManager.LoadScene(Constants.GAME_OVER_SCENE);
                 }
             }
@@ -359,6 +367,7 @@ public class Player : MonoBehaviour
         dead = false;
         setFloorGenerator();
         setMatePlayerScript();
+        setScoreScript();
         setLaneScript();
         setLives();
         setPlayerInputKeys();

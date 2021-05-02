@@ -42,4 +42,9 @@ public class GameManager : MonoBehaviour
         }
         // ReSharper disable once IteratorNeverReturns
     }
+
+    public int getScore()
+    {
+        return _score;
+    }
 }
