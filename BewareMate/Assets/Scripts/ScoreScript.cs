@@ -108,9 +108,4 @@ public class ScoreScript : MonoBehaviour
         return scoresString;
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 }

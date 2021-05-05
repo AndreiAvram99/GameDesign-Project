@@ -42,4 +42,5 @@ public class Constants : MonoBehaviour
     public const int GAME_SCENE = 1;
     public const int GAME_OVER_SCENE = 2;
     public const int HELP_SCENE = 3;
+    public const int CHOOSE_PLAYER_NAME_SCENE = 4;
 }

@@ -6,6 +6,7 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
     public GameManager gameManager;
+    public PlayerNameManager playerNameManager;
     public GameObject matePlayer;
     public GameObject mainCamera;
     public GameObject scoreManager;
@@ -256,7 +257,7 @@ public class Player : MonoBehaviour
                 dead = true;
                 this.transform.position = new Vector3(-40f, 10f, -15f);
                 if (matePlayerScript.isDead()) {
-                    scoreScript.addScore("Dummy1", "Dummy2", gameManager.getScore());
+                    scoreScript.addScore(playerNameManager.getFirstPlayerName(), playerNameManager.getSecondPlayerName(), gameManager.getScore());
                     SceneManager.LoadScene(Constants.GAME_OVER_SCENE);
                 }
             }

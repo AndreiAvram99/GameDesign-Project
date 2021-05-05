@@ -9,7 +9,7 @@ public class GameManager : MonoBehaviour
     public Vector3 moveVector;
     public float jumpHigh = 10f;
     public GameObject lanesSeparator;
-
+   
     private static int _score;
     private TextMeshProUGUI scoreText;
 
@@ -19,9 +19,7 @@ public class GameManager : MonoBehaviour
         StartCoroutine(scoreCoroutine());
         StartCoroutine(speedCoroutine());
     }
-    
-    
-    
+
     IEnumerator scoreCoroutine()
     {
         while (true)
