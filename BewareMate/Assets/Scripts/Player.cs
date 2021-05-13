@@ -374,6 +374,7 @@ public class Player : MonoBehaviour
         setPlayerInputKeys();
         setMiddles();
         setPlayerStartPosition();
+        gameManager.clearScore();
     }
 
     void Update()

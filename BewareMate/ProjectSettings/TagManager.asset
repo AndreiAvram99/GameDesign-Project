@@ -17,6 +17,7 @@ TagManager:
   - Score
   - FirstPlayerNameField
   - SecondPlayerNameField
+  - RankingText
   layers:
   - Default
   - TransparentFX

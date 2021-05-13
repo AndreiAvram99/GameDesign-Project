@@ -39,6 +39,11 @@ public class MenuScript : MonoBehaviour
         SceneManager.LoadScene(Constants.CHOOSE_PLAYER_NAME_SCENE);
     }
 
+    public void onRanking()
+    {
+        SceneManager.LoadScene(Constants.RANKING_SCENE);
+    }
+
     public void onQuit()
     {
 #if UNITY_EDITOR

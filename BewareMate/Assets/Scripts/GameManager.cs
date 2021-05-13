@@ -45,4 +45,9 @@ public class GameManager : MonoBehaviour
     {
         return _score;
     }
+
+    public void clearScore()
+    {
+        _score = 0;
+    }
 }
