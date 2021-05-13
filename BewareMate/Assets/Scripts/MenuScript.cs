@@ -1,6 +1,7 @@
 ﻿using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEditor;
 
 
 public class MenuScript : MonoBehaviour
@@ -13,6 +14,13 @@ public class MenuScript : MonoBehaviour
     {
         string firstPlayerName = firstPlayerInputField.text;
         string secondPlayerName = secondPlayerInputField.text;
+
+        if(firstPlayerName.Length == 0 || secondPlayerName.Length == 0)
+        {
+            EditorUtility.DisplayDialog("Name(s) is(are) empty", "Both names have to be completed", "Ok");
+            return;
+        }
+
         playerNameManager.GetComponent<PlayerNameManager>().setPlayerName(firstPlayerName, secondPlayerName);
         SceneManager.LoadScene(Constants.GAME_SCENE);
     }
