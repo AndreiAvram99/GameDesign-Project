@@ -1,10 +1,10 @@
 yhdsy,ys,141
 Geroge,Radu,126
+V,D,105
 anca,daniel,103
 Andrei,Daniel,94
 Leo,Geo,90
+hgh,jhg,57
 daniel,andrei,39
 Andrei,Dani,39
 ceva1,ceva2,33
--,-,0
--,-,0
