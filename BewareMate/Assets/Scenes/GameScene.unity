@@ -364,8 +364,8 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 1
   m_Interpolate: 0
-  m_Constraints: 0
-  m_CollisionDetection: 3
+  m_Constraints: 126
+  m_CollisionDetection: 1
 --- !u!1 &456717061
 GameObject:
   m_ObjectHideFlags: 0
@@ -476,7 +476,7 @@ Rigidbody:
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 114
-  m_CollisionDetection: 0
+  m_CollisionDetection: 2
 --- !u!114 &456717067
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -625,7 +625,7 @@ Rigidbody:
   m_IsKinematic: 1
   m_Interpolate: 0
   m_Constraints: 126
-  m_CollisionDetection: 3
+  m_CollisionDetection: 1
 --- !u!1 &537712987
 GameObject:
   m_ObjectHideFlags: 0
@@ -733,7 +733,7 @@ Rigidbody:
   m_IsKinematic: 1
   m_Interpolate: 0
   m_Constraints: 126
-  m_CollisionDetection: 3
+  m_CollisionDetection: 1
 --- !u!1001 &686435418
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1599,8 +1599,8 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 1
   m_Interpolate: 0
-  m_Constraints: 6
-  m_CollisionDetection: 3
+  m_Constraints: 126
+  m_CollisionDetection: 1
 --- !u!1 &1144600321
 GameObject:
   m_ObjectHideFlags: 0
@@ -1818,7 +1818,7 @@ Rigidbody:
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 114
-  m_CollisionDetection: 0
+  m_CollisionDetection: 2
 --- !u!65 &1340436053
 BoxCollider:
   m_ObjectHideFlags: 0

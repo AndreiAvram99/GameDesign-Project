@@ -17,7 +17,7 @@ public class MenuScript : MonoBehaviour
 
         if(firstPlayerName.Length == 0 || secondPlayerName.Length == 0)
         {
-            EditorUtility.DisplayDialog("Name(s) is(are) empty", "Both names have to be completed", "Ok");
+            // EditorUtility.DisplayDialog("Name(s) is(are) empty", "Both names have to be completed", "Ok");
             return;
         }
 
